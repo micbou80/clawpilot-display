@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Pro v3 — Emoji Design</title>
+<script>
+  (() => {
+    const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+    const theme = param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<style>
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cp-bg);
+  color: var(--cp-text);
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.header { text-align: center; margin-bottom: 20px; }
+.header h1 { font-size: 22px; font-weight: 600; }
+.header p { color: var(--cp-text-muted); font-size: 13px; margin-top: 4px; }
+
+/* Category tabs */
+.categories { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 20px; }
+.cat-btn {
+  padding: 6px 14px; border-radius: 0.625rem; border: 1px solid var(--cp-border);
+  background: var(--cp-surface); color: var(--cp-text-muted); font-size: 13px; cursor: pointer; transition: all 0.15s;
+}
+.cat-btn:hover { border-color: var(--cp-accent); color: var(--cp-accent); }
+.cat-btn.active { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+
+.layout { display: flex; gap: 24px; max-width: 1200px; margin: 0 auto; align-items: flex-start; }
+.scenario-list {
+  width: 260px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px;
+  max-height: 80vh; overflow-y: auto; padding-right: 6px;
+}
+.scenario-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+  border-radius: 8px; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; font-size: 13px;
+}
+.scenario-item:hover { background: var(--cp-accent-soft); }
+.scenario-item.active { background: var(--cp-accent-soft); border-color: var(--cp-accent); }
+.scenario-item .icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+.scenario-item .label { font-weight: 500; }
+.scenario-item .badge {
+  font-size: 9px; padding: 1px 6px; border-radius: 4px;
+  background: var(--cp-accent-soft); color: var(--cp-accent); margin-left: auto; flex-shrink: 0;
+}
+
+.preview-area { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+/* ── DEVICE FRAME ── */
+.device-frame {
+  background: linear-gradient(145deg, #8a8785, #6e6c6a);
+  border-radius: 14px;
+  padding: 10px 10px 28px 10px;
+  box-shadow: var(--cp-shadow), 0 2px 0 #555 inset, 0 -1px 0 #444;
+  position: relative;
+}
+.device-btns {
+  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 14px;
+}
+.device-btn-round {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: linear-gradient(145deg, #999, #777);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
+}
+.device-usb {
+  position: absolute; right: -4px; top: 50%; transform: translateY(-50%);
+  width: 6px; height: 14px; background: #555; border-radius: 0 2px 2px 0;
+}
+.device-feet {
+  position: absolute; bottom: -4px; left: 16px; right: 16px;
+  display: flex; justify-content: space-between;
+}
+.device-foot { width: 12px; height: 4px; border-radius: 0 0 3px 3px; background: #444; }
+
+/* ── THE SCREEN (480x320) ── */
+.screen {
+  width: 480px; height: 320px;
+  background: #0a0a0f;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── STATUS BAR ── */
+.sbar {
+  height: 28px; display: flex; align-items: center; padding: 0 16px;
+  font-size: 12px; color: #8a8a8a;
+}
+.sbar-left { font-weight: 500; color: #c0c0c0; }
+.sbar-center { flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.sbar-right { display: flex; align-items: center; gap: 5px; }
+.sbar-batt { display: inline-flex; align-items: center; gap: 3px; }
+.sbar-batt-icon {
+  width: 18px; height: 10px; border: 1px solid #777; border-radius: 2px; position: relative;
+  display: inline-block;
+}
+.sbar-batt-icon::after {
+  content: ''; position: absolute; right: -3px; top: 2px; width: 2px; height: 4px;
+  background: #777; border-radius: 0 1px 1px 0;
+}
+.sbar-batt-fill { position: absolute; left: 1px; top: 1px; bottom: 1px; border-radius: 1px; }
+
+/* ── CONTENT AREA ── */
+.content-area { padding: 0 16px; height: 292px; overflow: hidden; position: relative; }
+
+/* ── CONSISTENT TWO-COLUMN LAYOUT ── */
+.two-col {
+  display: flex; gap: 14px; height: 100%;
+}
+.col-left {
+  width: 160px; flex-shrink: 0;
+  display: flex; flex-direction: column; padding-top: 6px;
+}
+.col-right {
+  flex: 1; display: flex; flex-direction: column; padding-top: 6px;
+  overflow: hidden;
+}
+.col-left-quick {
+  flex: 1;
+}
+.col-left-orb {
+  display: flex; justify-content: center; padding-bottom: 12px;
+}
+
+/* ── ACCENT COLORS ── */
+:root {
+  --rd-accent: #e87c3e;
+  --rd-accent-soft: rgba(232, 124, 62, 0.12);
+  --rd-blue: #5b9bd5;
+  --rd-purple: #7b68ee;
+  --rd-green: #4ade80;
+  --rd-red: #f87171;
+  --rd-gold: #fbbf24;
+  --rd-cyan: #67e8f9;
+}
+
+/* ── SECTION HEADER ── */
+.section-hdr {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--rd-accent); margin-bottom: 8px; white-space: nowrap;
+}
+.section-hdr .s-icon { font-size: 12px; }
+
+/* ── CARD ── */
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+/* ── EMOJI INDICATOR (replaces orb) ── */
+.emoji-indicator {
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.emoji-icon {
+  font-size: 48px;
+  filter: drop-shadow(0 0 12px rgba(232,124,62,0.25));
+  animation: emoji-breathe 4s ease-in-out infinite;
+}
+@keyframes emoji-breathe {
+  0%,100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(232,124,62,0.25)); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 18px rgba(232,124,62,0.4)); }
+}
+.emoji-icon.sm { font-size: 36px; }
+.emoji-icon.urgent { animation: emoji-breathe 1.2s ease-in-out infinite; }
+.emoji-icon.alert { animation: emoji-breathe 2s ease-in-out infinite; }
+.emoji-icon.calm { animation: emoji-breathe 5s ease-in-out infinite; }
+.emoji-icon.sleep { animation: emoji-breathe 6s ease-in-out infinite; opacity: 0.4; }
+.emoji-icon.work { animation: emoji-breathe 2.5s ease-in-out infinite; }
+.emoji-icon.none { animation: none; }
+
+/* ── TEXT STYLES ── */
+.scr-body { color: #c8c8c8; font-size: 13px; line-height: 1.5; }
+.scr-muted { color: #666; font-size: 11px; }
+.scr-dim { color: #444; font-size: 10px; }
+.scr-white { color: #e0e0e0; }
+.scr-bold { font-weight: 600; }
+
+/* ── BIG METRIC (left column) ── */
+.big-metric {
+  font-size: 32px; font-weight: 200; letter-spacing: 1px;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  line-height: 1.1;
+}
+.metric-label { font-size: 11px; color: #666; margin-top: 2px; }
+
+/* ── CLOCK ── */
+.big-clock { font-size: 72px; font-weight: 200; color: #e0e0e0; text-align: center; letter-spacing: 3px;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace; }
+.big-clock .colon { opacity: 0.3; animation: blink-c 1s steps(1) infinite; }
+@keyframes blink-c { 0%,49%{opacity:0.3} 50%,100%{opacity:0.8} }
+
+/* ── TODAY CALENDAR STRIP (bottom of right col) ── */
+.today-strip { margin-top: auto; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.04); }
+.today-hdr { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 4px; }
+.today-item {
+  display: flex; align-items: center; gap: 6px; font-size: 11px; color: #888; padding: 2px 0;
+}
+.today-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--rd-blue); flex-shrink: 0; }
+.today-time { color: #666; width: 36px; flex-shrink: 0; }
+.today-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.today-until { color: #555; font-size: 10px; flex-shrink: 0; }
+
+/* ── BADGES ── */
+.badge-sm {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; color: #888; background: rgba(255,255,255,0.06);
+  padding: 2px 8px; border-radius: 4px;
+}
+
+/* ── DASHBOARD GRID ── */
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dash-cell {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px; padding: 10px;
+}
+.dash-label { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.dash-val { font-size: 11px; color: #aaa; padding: 2px 0; }
+.dash-val-hi { color: #ddd; }
+.dash-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+/* ── FLIGHT ── */
+.fl-code { font-size: 22px; color: #ddd; font-weight: 300; font-family: 'JetBrains Mono', Consolas, monospace; }
+.fl-city { font-size: 9px; color: #555; }
+.fl-status-badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; }
+
+/* ── HOME GRID ── */
+.home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+.home-dev {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 6px; padding: 6px; text-align: center;
+}
+.home-dev.on { border-color: rgba(74,222,128,0.2); }
+.home-dev .d-icon { font-size: 14px; }
+.home-dev .d-name { font-size: 8px; color: #777; margin-top: 1px; }
+.home-dev .d-state { font-size: 8px; color: #555; }
+.home-dev.on .d-state { color: #4ade80; }
+
+/* ── VOICE WAVES ── */
+.voice-bars { display: flex; align-items: center; gap: 2px; }
+.vbar { width: 3px; border-radius: 2px; animation: vwave 0.7s ease-in-out infinite; }
+@keyframes vwave { 0%,100%{height:6px} 50%{height:28px} }
+
+/* ── SPARKLES ── */
+.sparkle { position: absolute; font-size: 12px; animation: sparkle-anim 1.5s ease-in-out infinite; }
+@keyframes sparkle-anim { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:1;transform:scale(1)} }
+
+/* ── CODE RAIN (working) ── */
+.rain-col {
+  position: absolute; font-size: 10px; line-height: 13px; color: #0a3a0a; white-space: pre;
+  animation: rain-fall linear infinite; font-family: 'JetBrains Mono', Consolas, monospace;
+}
+.rain-col .lead { color: #22c55e; text-shadow: 0 0 4px #22c55e; }
+@keyframes rain-fall { from { transform: translateY(-80px); } to { transform: translateY(300px); } }
+
+/* ── NIGHT ── */
+.night-time {
+  font-size: 40px; color: rgba(255,255,255,0.10); text-align: center;
+  font-family: 'JetBrains Mono', Consolas, monospace; font-weight: 200;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
+}
+
+/* ── DESCRIPTION PANEL ── */
+.desc-panel {
+  background: var(--cp-surface); border: 1px solid var(--cp-border);
+  border-radius: 0.625rem; padding: 16px 20px; max-width: 520px; width: 100%;
+}
+.desc-panel h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.desc-panel .cat-tag {
+  display: inline-block; font-size: 10px; padding: 1px 8px; border-radius: 4px; margin-bottom: 8px;
+}
+.desc-panel p { font-size: 13px; color: var(--cp-text-muted); line-height: 1.5; }
+.desc-panel .dets { margin-top: 10px; }
+.desc-panel .det-row { display: flex; gap: 8px; font-size: 12px; padding: 3px 0; }
+.desc-panel .det-lbl { color: var(--cp-text-soft); min-width: 80px; }
+.desc-panel .det-val { color: var(--cp-text); }
+
+/* ── FOCUS SPIN ── */
+@keyframes focus-spin { to { transform: rotate(360deg); } }
+@keyframes urg-pulse { 0%,100%{border-color:rgba(239,68,68,0.15)} 50%{border-color:rgba(239,68,68,0.4)} }
+@keyframes personality-morph { 0%,100%{border-radius:50%;transform:scale(1)} 25%{border-radius:45% 55% 50% 50%;transform:scale(1.06)} 50%{border-radius:50% 45% 55% 50%;transform:scale(0.96)} 75%{border-radius:55% 50% 45% 55%;transform:scale(1.04)} }
+
+/* ── RENDER GALLERY ── */
+.render-gallery {
+  width: 100%; max-width: 560px; margin-top: 8px;
+}
+.render-gallery h3 {
+  font-size: 14px; font-weight: 600; color: var(--cp-text-muted); margin-bottom: 10px;
+}
+.render-grid { display: flex; flex-direction: column; gap: 12px; }
+.render-card {
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--cp-border);
+  background: var(--cp-surface);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.render-card img {
+  width: 100%; display: block;
+}
+.render-caption {
+  padding: 8px 12px; font-size: 12px; color: var(--cp-text-muted); line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .layout { flex-direction: column; align-items: center; }
+  .scenario-list { width: 100%; max-height: none; flex-direction: row; flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Red Pro v3 — Emoji Design</h1>
+  <p>480 x 320 IPS — Left: quick info + emoji · Right: rich detail</p>
+</div>
+
+<div class="categories" id="cats"></div>
+<div class="layout">
+  <div class="scenario-list" id="list"></div>
+  <div class="preview-area">
+    <div class="device-frame">
+      <div class="device-usb"></div>
+      <div class="device-btns"><div class="device-btn-round"></div><div class="device-btn-round"></div></div>
+      <div class="device-feet"><div class="device-foot"></div><div class="device-foot"></div></div>
+      <div class="screen" id="screen"></div>
+    </div>
+    <div class="desc-panel" id="desc"></div>
+    <div class="render-gallery">
+      <h3>Concept Renders</h3>
+      <div class="render-grid">
+        <div class="render-card">
+          <img src="concept-render-meeting.png" alt="Meeting countdown concept render — desk device showing upcoming 1:1 with countdown, prep context, and today's calendar" loading="lazy">
+          <div class="render-caption">Meeting Countdown — desk device concept with countdown, prep context, and calendar strip</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═════════════════════════════════════════
+   SCENARIO DATA
+   ═════════════════════════════════════════
+
+   ┌──────────────────────────────────────────────────────┐
+   │  NOTIFICATION LIFECYCLE DESIGN REQUIREMENTS          │
+   │  (Added after device reboot incident 2026-05-02)     │
+   ├──────────────────────────────────────────────────────┤
+   │                                                      │
+   │  1. AUTO-EXPIRY (TTL)                                │
+   │     Every pushed notification MUST include a TTL.    │
+   │     • working:     10 min (refreshed by heartbeat)   │
+   │     • stuck:       15 min                            │
+   │     • needs-input: 30 min                            │
+   │     • done/error:   6 sec (auto-dismiss)             │
+   │     • toast notifs: 8 sec                            │
+   │     On expiry → device returns to idle.              │
+   │                                                      │
+   │  2. HEARTBEAT KEEP-ALIVE (working state only)        │
+   │     Sender must push a heartbeat every 60s while     │
+   │     task is active. Each heartbeat resets the 10min   │
+   │     TTL. If heartbeat stops → TTL expires → idle.    │
+   │                                                      │
+   │  3. EXPLICIT CLEAR ENDPOINT                          │
+   │     API must support:                                │
+   │     • POST /clear — cancel any active notification   │
+   │     • POST /push with type:"idle" — force idle       │
+   │     Software should always send clear/done when a    │
+   │     task finishes, even if TTL would handle it.      │
+   │                                                      │
+   │  4. DEVICE-SIDE WATCHDOG (firmware)                  │
+   │     Independent of software TTL, the device runs a   │
+   │     watchdog timer:                                  │
+   │     • If no API activity for 15 min → return to idle │
+   │     • This is the last-resort safety net             │
+   │     • Prevents zombie screens even if software and   │
+   │       network both fail                              │
+   │                                                      │
+   │  5. STATE CLEARING HIERARCHY                         │
+   │     done/error clears working/stuck/needs-input.     │
+   │     idle clears everything.                          │
+   │     New working clears previous working.             │
+   │     Notification toasts stack, not replace.           │
+   │                                                      │
+   └──────────────────────────────────────────────────────┘
+*/
+const S = [
+  // ─── AMBIENT ───
+  { id:'idle', name:'Idle', icon:'🕐', cat:'Ambient',
+    desc:'Large clock with date and weather. The orb floats in the lower-right as a calm presence.',
+    trigger:'Default state — no active notifications or tasks',
+    orb:'Calm breathing (green/teal), slow 4s pulse',
+    duration:'Indefinite', isNew:false },
+  { id:'dashboard', name:'Dashboard', icon:'📊', cat:'Ambient',
+    desc:'Two-column dashboard. Left: clock + weather + orb. Right: today\'s calendar + inbox counts + agent status.',
+    trigger:'Button press from idle, or scheduled rotation',
+    orb:'Small, calm green in left column',
+    duration:'30s then idle', isNew:true },
+  { id:'night', name:'Night Mode', icon:'🌙', cat:'Ambient',
+    desc:'Near-black screen, faint clock, sleeping orb. Backlight at 10%. Notifications queue silently.',
+    trigger:'Auto 22:00–07:00 or manual',
+    orb:'Deep navy, barely visible, 6s ultra-slow pulse',
+    duration:'Until morning', isNew:false },
+  { id:'orb-idle', name:'Ambient Orb', icon:'🔮', cat:'Ambient',
+    desc:'Full-screen orb as the sole element. The breathing presence. Color reflects system health.',
+    trigger:'Long idle, or button toggle',
+    orb:'Large centered orb, color = status',
+    duration:'Indefinite', isNew:true },
+
+  // ─── NOTIFICATIONS ───
+  { id:'notif-msg', name:'Message Notification', icon:'✉️', cat:'Notifications',
+    desc:'Left: header + sender + orb. Right: message body + context. Consistent two-column layout.',
+    trigger:'Red handling a chat/email on your behalf',
+    orb:'Default warm amber, inline left column',
+    duration:'Until next state change', isNew:true },
+  { id:'email', name:'Email Alert', icon:'📧', cat:'Notifications',
+    desc:'Left: EMAIL header + sender name + orb. Right: subject, preview, timestamp, priority.',
+    trigger:'New email from VIP or flagged sender',
+    orb:'Subtle pulse on arrival',
+    duration:'8s auto-dismiss', isNew:false },
+  { id:'teams', name:'Teams Message', icon:'💬', cat:'Notifications',
+    desc:'Left: TEAMS header + sender name + orb. Right: chat name, message preview, quick context.',
+    trigger:'Mention or message in monitored chat',
+    orb:'Purple-tinted pulse',
+    duration:'8s', isNew:false },
+  { id:'urgent', name:'Urgent Alert', icon:'🚨', cat:'Notifications',
+    desc:'Left: URGENT header + severity + urgent orb. Right: alert details + impact + time. Red glow edges.',
+    trigger:'Urgent keyword, VIP escalation, system alert',
+    orb:'Red, fast 1.2s breathing, intense glow',
+    duration:'15s or button dismiss', isNew:false },
+  { id:'worth-reply', name:'Worth a Reply', icon:'💡', cat:'Notifications',
+    desc:'Left: header + wait time + orb. Right: who\'s waiting, what about, context from recent comms.',
+    trigger:'Clawpilot analysis flags pending message',
+    orb:'Gold-tinted, thoughtful pace',
+    duration:'10s', isNew:false },
+
+  // ─── CALENDAR ───
+  { id:'countdown', name:'Meeting Countdown', icon:'⏱️', cat:'Calendar',
+    desc:'Left: header + big countdown digits + orb. Right: meeting title + time + Teams badge + prep context + TODAY calendar. Exact concept match.',
+    trigger:'15 min before meeting',
+    orb:'Color follows countdown urgency',
+    duration:'Until meeting time', isNew:false },
+  { id:'meeting-prep', name:'Meeting Prep', icon:'📋', cat:'Calendar',
+    desc:'Left: PREP header + "in X min" + orb. Right: meeting details + last actions + relevant comms + TODAY strip.',
+    trigger:'With countdown, or standalone 10 min before',
+    orb:'Calm blue, inline left',
+    duration:'Until meeting starts', isNew:true },
+  { id:'late', name:'Running Late', icon:'🏃', cat:'Calendar',
+    desc:'Left: LATE header + flashing +MM:SS + urgent orb. Right: meeting name, attendees waiting, join link hint.',
+    trigger:'Meeting started, no join detected',
+    orb:'Urgent red, fast pulse',
+    duration:'Until join or 10 min', isNew:false },
+  { id:'context-switch', name:'Context Switch', icon:'🔄', cat:'Calendar',
+    desc:'Left: SWITCH header + "5 min" + transition orb. Right: current context → next context cards stacked.',
+    trigger:'5 min before meeting on different topic',
+    orb:'Transitioning color',
+    duration:'10s', isNew:false },
+
+  // ─── AGENT STATUS ───
+  { id:'working', name:'Red is Working', icon:'⚙️', cat:'Agent',
+    desc:'Left: WORKING header + elapsed timer + work orb. Right: task description + progress details. Code rain bg. ⚠️ LIFECYCLE: Auto-expires after 10 min if no heartbeat/update received. Device firmware falls back to idle on expiry. Sender must heartbeat every 60s to keep alive.',
+    trigger:'Clawpilot sends working status',
+    orb:'Cyan/purple, coding vibe',
+    duration:'Until task complete (max 10min TTL, refreshed by heartbeat)', isNew:false },
+  { id:'done', name:'Task Complete', icon:'✅', cat:'Agent',
+    desc:'Left: DONE header + duration + calm orb. Right: task summary + what was accomplished. Also clears any stale working/stuck/needs-input state.',
+    trigger:'Working task finishes',
+    orb:'Green, happy glow',
+    duration:'6s → auto-return to idle', isNew:false },
+  { id:'needs-input', name:'Needs Input', icon:'❓', cat:'Agent',
+    desc:'Left: INPUT header + "Waiting" + alert orb. Right: question + option cards side by side. ⚠️ LIFECYCLE: Auto-expires after 30 min. Device shows "⏰ Timed out — check Clawpilot" briefly, then returns to idle.',
+    trigger:'Agent hits decision point',
+    orb:'Gold, pulsing attention-request',
+    duration:'Persistent (max 30min TTL)', isNew:false },
+  { id:'stuck', name:'Agent Stuck', icon:'🤔', cat:'Agent',
+    desc:'Left: STUCK header + retry count + dim orb. Right: error details + what was tried. ⚠️ LIFECYCLE: Auto-expires after 15 min → idle. Prevents zombie stuck screens.',
+    trigger:'Agent retry exhausted',
+    orb:'Dim amber, slow uncertain flicker',
+    duration:'Persistent (max 15min TTL)', isNew:false },
+  { id:'decision', name:'Decision Needed', icon:'⚖️', cat:'Agent',
+    desc:'Left: DECISION header + "2 options" + neutral orb. Right: option comparison cards stacked. ⚠️ LIFECYCLE: Auto-expires after 30 min → idle.',
+    trigger:'Multi-path choice in agent workflow',
+    orb:'Neutral, steady',
+    duration:'Persistent (max 30min TTL)', isNew:false },
+
+  // ─── WELLNESS ───
+  { id:'hydrate', name:'Hydrate', icon:'💧', cat:'Wellness',
+    desc:'Left: 💧 header + time since last + calm blue orb. Right: gentle reminder text.',
+    trigger:'Every 90 min during work hours',
+    orb:'Blue water tint',
+    duration:'6s', isNew:false },
+  { id:'move', name:'Move Break', icon:'🚶', cat:'Wellness',
+    desc:'Left: 🚶 header + sitting duration + green orb. Right: stretch suggestion.',
+    trigger:'60 min continuous desk time',
+    orb:'Green, encouraging',
+    duration:'6s', isNew:false },
+  { id:'focus', name:'Focus Mode', icon:'🎯', cat:'Wellness',
+    desc:'Left: FOCUS header + elapsed time + calm orb. Right: focus ring animation + notifications paused status.',
+    trigger:'Button press or API',
+    orb:'Calm green, very slow breathing',
+    duration:'Until dismissed', isNew:false },
+
+  // ─── PRO EXCLUSIVE ───
+  { id:'flight', name:'Flight Tracker', icon:'✈️', cat:'Pro',
+    desc:'Left: FLIGHT header + route codes + orb. Right: gate, status, times, boarding countdown.',
+    trigger:'Flight in calendar within 24h',
+    orb:'Steady blue (on time) or amber (delayed)',
+    duration:'Travel day persistent', isNew:true },
+  { id:'voice', name:'Voice Active', icon:'🎙️', cat:'Pro',
+    desc:'Left: VOICE header + "Listening" + reactive orb. Right: audio waveform visualization.',
+    trigger:'PTT button held',
+    orb:'Bright, reactive to audio',
+    duration:'While button held', isNew:true },
+  { id:'home', name:'Home Assistant', icon:'🏠', cat:'Pro',
+    desc:'Left: HOME header + temp reading + orb. Right: device grid showing states.',
+    trigger:'Voice command or button combo',
+    orb:'Warm home tint',
+    duration:'10s', isNew:true },
+  { id:'morning', name:'Morning Briefing', icon:'☀️', cat:'Pro',
+    desc:'Left: greeting + weather + sunrise orb. Right: meetings + inbox + key action for the day.',
+    trigger:'First activity after night mode',
+    orb:'Warm sunrise gradient',
+    duration:'15s', isNew:false },
+  { id:'shutdown', name:'End of Day', icon:'🌅', cat:'Pro',
+    desc:'Left: "Good night" + date + sleep orb. Right: day summary stats.',
+    trigger:'Configured end time or manual',
+    orb:'Sunset fading to sleep',
+    duration:'10s then night', isNew:false },
+  { id:'celebration', name:'Celebration', icon:'🎉', cat:'Pro',
+    desc:'Left: 🎉 header + achievement + festive orb. Right: what was achieved + sparkle overlay.',
+    trigger:'Achievement event',
+    orb:'Bright festive, rapid happy pulse',
+    duration:'8s', isNew:false },
+  { id:'personality', name:'Idle Personality', icon:'🦞', cat:'Pro',
+    desc:'Left: clock (dimmed) + morphing orb doing something playful. Right: subtle ambient scene.',
+    trigger:'Random, every 15-30 min during idle',
+    orb:'Playful color shifts, shape morphing',
+    duration:'5-10s', isNew:true },
+];
+
+const CATS = [...new Set(S.map(s=>s.cat))];
+let activeCat = 'all', activeS = S[0];
+
+/* ═════════════════════════════════════════
+   HELPERS
+   ═════════════════════════════════════════ */
+function sbar(extra) {
+  return `<div class="sbar">
+    <div class="sbar-left">14:26 <span style="margin:0 4px;color:#555">•</span> Sat, May 2</div>
+    <div class="sbar-center">
+      <span style="font-size:14px">⛅</span> <span>22°C</span> <span style="color:#555">Partly cloudy</span>
+    </div>
+    <div class="sbar-right">
+      ${extra||''}
+      <div class="sbar-batt">
+        <span class="sbar-batt-icon"><span class="sbar-batt-fill" style="width:80%;background:#4ade80"></span></span>
+        82%
+      </div>
+    </div>
+  </div>`;
+}
+
+function orb(emoji, anim) {
+  const a = anim || '';
+  return `<div class="emoji-indicator"><span class="emoji-icon ${a}">${emoji}</span></div>`;
+}
+
+function todayStrip(items) {
+  return `<div class="today-strip">
+    <div class="today-hdr">TODAY</div>
+    ${items.map(i=>`<div class="today-item">
+      <span class="today-dot" ${i.color?`style="background:${i.color}"`:''}></span>
+      <span class="today-time">${i.time}</span>
+      <span class="today-title">${i.title}</span>
+      <span class="today-until">${i.until}</span>
+    </div>`).join('')}
+  </div>`;
+}
+
+const defaultToday = [
+  { time:'16:00', title:'Marketing Sync', until:'35m' },
+  { time:'17:30', title:'Product Review', until:'1h 5m' },
+  { time:'19:00', title:'Dinner with Alex', until:'2h 35m' },
+];
+
+/* ═════════════════════════════════════════
+   SCREEN RENDERERS — CONSISTENT TWO-COLUMN
+   ═════════════════════════════════════════ */
+const R = {
+  /* ─── AMBIENT (special layouts) ─── */
+  idle() {
+    return sbar() + `<div class="content-area" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative">
+      <div class="big-clock" style="margin-top:-10px">14<span class="colon">:</span>26</div>
+      <div style="text-align:center;color:#555;font-size:13px;margin-top:2px">Saturday, May 2, 2026</div>
+      <div style="text-align:center;color:#666;font-size:12px;margin-top:6px">⛅ 22°C — Partly cloudy</div>
+      <div style="position:absolute;bottom:12px;right:12px">${orb('🦞','calm')}</div>
+    </div>`;
+  },
+
+  dashboard() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div style="font-size:28px;color:#ddd;font-weight:200;font-family:Consolas,monospace">14:26</div>
+          <div style="font-size:11px;color:#666;margin-top:2px">Sat, May 2</div>
+          <div style="font-size:11px;color:#666;margin-top:2px">⛅ 22°C</div>
+          <div style="margin-top:12px">
+            <div style="font-size:10px;color:#555;margin-bottom:4px">INBOX</div>
+            <div style="font-size:11px;color:#aaa">✉️ 3 unread</div>
+            <div style="font-size:11px;color:#aaa">💬 1 mention</div>
+          </div>
+        </div>
+        <div class="col-left-orb">${orb('📊','calm sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="section-hdr"><span class="s-icon">📅</span> TODAY</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="today-item"><span class="today-dot" style="background:#4ade80"></span><span class="today-time" style="text-decoration:line-through;color:#444">09:00</span><span class="today-title" style="text-decoration:line-through;color:#444">Standup</span><span class="today-until" style="color:#4ade80">done</span></div>
+          <div class="today-item"><span class="today-dot"></span><span class="today-time">11:00</span><span class="today-title">1:1 Chris</span><span class="today-until">25m</span></div>
+          <div class="today-item"><span class="today-dot"></span><span class="today-time">14:00</span><span class="today-title">Design Review</span><span class="today-until">2h</span></div>
+          <div class="today-item"><span class="today-dot" style="background:var(--rd-gold)"></span><span class="today-time">16:00</span><span class="today-title">Sprint Retro</span><span class="today-until">4h</span></div>
+        </div>
+        <div style="margin-top:auto;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04)">
+          <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">AGENT</div>
+          <div style="font-size:11px;color:#4ade80">● Idle — all clear</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  night() {
+    return `<div style="width:480px;height:320px;background:#020208;position:relative">
+      <div class="night-time">02:47</div>
+      <div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%)">${orb('😴','sleep')}</div>
+    </div>`;
+  },
+
+  'orb-idle'() {
+    return sbar() + `<div class="content-area" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="emoji-indicator"><span class="emoji-icon calm" style="font-size:80px">🦞</span></div>
+      <div style="color:#555;font-size:11px;margin-top:16px">Red is here</div>
+    </div>`;
+  },
+
+  /* ─── NOTIFICATIONS (two-column) ─── */
+  'notif-msg'() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">✉️</span> NOTIFICATION</div>
+          <div style="font-size:13px;color:#ddd;font-weight:500">Jimmy</div>
+          <div style="font-size:10px;color:#666;margin-top:2px">Dream Team chat</div>
+          <div style="font-size:10px;color:var(--rd-accent);margin-top:8px">Replying on<br>your behalf</div>
+        </div>
+        <div class="col-left-orb">${orb('✉️','')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:12px;color:#ddd;font-weight:500;margin-bottom:4px">Discussing product details</div>
+          <div style="font-size:11px;color:#888;line-height:1.5">Jimmy asked about the demo room availability for next Tuesday. Red is checking calendar and responding.</div>
+        </div>
+        ${todayStrip(defaultToday)}
+      </div>
+    </div></div>`;
+  },
+
+  email() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">📧</span> EMAIL</div>
+          <div style="font-size:14px;color:#ddd;font-weight:500">Chris Luce</div>
+          <div style="font-size:10px;color:#666;margin-top:2px">10:41 AM</div>
+          <div style="font-size:10px;color:var(--rd-accent);margin-top:8px">VIP sender</div>
+        </div>
+        <div class="col-left-orb">${orb('📧','sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:12px;color:#ddd;font-weight:500;margin-bottom:4px">Budget review ready for sign-off</div>
+          <div style="font-size:11px;color:#888;line-height:1.5">Please review the attached document before Thursday EOD. I've highlighted the sections that changed from last quarter.</div>
+        </div>
+        ${todayStrip(defaultToday)}
+      </div>
+    </div></div>`;
+  },
+
+  teams() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-purple)"><span class="s-icon">💬</span> TEAMS</div>
+          <div style="font-size:14px;color:#ddd;font-weight:500">Jimmy</div>
+          <div style="font-size:10px;color:#666;margin-top:2px">Dream Team</div>
+          <div style="font-size:10px;color:#666;margin-top:2px">10:38 AM</div>
+        </div>
+        <div class="col-left-orb">${orb('💬','sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:11px;color:#888;line-height:1.5">Red, can you check if there's availability for a demo room next Tuesday afternoon? Need it for the partner visit.</div>
+        </div>
+        ${todayStrip(defaultToday)}
+      </div>
+    </div></div>`;
+  },
+
+  urgent() {
+    return sbar('<span style="color:#f87171;font-weight:600;font-size:10px;margin-right:6px">URGENT</span>') +
+    `<div class="content-area" style="box-shadow:inset 0 0 40px rgba(239,68,68,0.08)"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-red)"><span class="s-icon">🚨</span> URGENT</div>
+          <div style="font-size:13px;color:#f87171;font-weight:600">Critical</div>
+          <div style="font-size:10px;color:#666;margin-top:2px">2 min ago</div>
+          <div style="font-size:10px;color:#f87171;margin-top:8px">Requires action</div>
+        </div>
+        <div class="col-left-orb">${orb('🚨','urgent')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card" style="border-color:rgba(239,68,68,0.2);animation:urg-pulse 1.5s infinite">
+          <div style="font-size:13px;color:#ddd;font-weight:500;margin-bottom:4px">Production Deploy Failed</div>
+          <div style="font-size:11px;color:#888;line-height:1.5">Teams Rooms gateway rollback initiated. 3 services affected. DevOps team paged.</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  'worth-reply'() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-gold)"><span class="s-icon">💡</span> WORTH A REPLY</div>
+          <div style="font-size:22px;color:var(--rd-gold);font-weight:300;font-family:Consolas,monospace">6h</div>
+          <div style="font-size:10px;color:#666;margin-top:2px">waiting</div>
+        </div>
+        <div class="col-left-orb">${orb('💡','alert sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:13px;color:#ddd;font-weight:500;margin-bottom:4px">Martin Zimmer</div>
+          <div style="font-size:11px;color:#888;line-height:1.5">Asked about Q3 partner enablement plan. He needs direction before the offsite.</div>
+          <div style="font-size:10px;color:var(--rd-gold);margin-top:6px">⏳ Sent at 09:12 AM</div>
+        </div>
+        ${todayStrip(defaultToday)}
+      </div>
+    </div></div>`;
+  },
+
+  /* ─── CALENDAR (two-column) ─── */
+  countdown() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">📅</span> UPCOMING MEETING</div>
+          <div class="big-metric" style="color:var(--rd-accent)">4m 39s</div>
+          <div class="metric-label">until start</div>
+        </div>
+        <div class="col-left-orb">${orb('⏱️','alert')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:16px;color:#e0e0e0;font-weight:600">1:1 with Chris</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <span style="font-size:11px;color:#777">🕐 14:31 – 15:01</span>
+            <span class="badge-sm">📋 Teams meeting</span>
+          </div>
+        </div>
+        <div style="margin-top:6px">
+          <div class="section-hdr" style="color:#e05a3a;margin-top:4px"><span class="s-icon">📌</span> PREPARE</div>
+          <div style="font-size:11px;color:#888;line-height:1.5;padding:0 2px">Last week Chris asked about the marketing investments and wants to follow up on it this week.</div>
+        </div>
+        ${todayStrip(defaultToday)}
+      </div>
+    </div></div>`;
+  },
+
+  'meeting-prep'() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">📋</span> MEETING PREP</div>
+          <div class="big-metric" style="color:var(--rd-blue)">5 min</div>
+          <div class="metric-label">until start</div>
+        </div>
+        <div class="col-left-orb">${orb('📋','sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:13px;color:#ddd;font-weight:500">1:1 with Chris</div>
+          <div style="font-size:11px;color:#777;margin-top:2px">🕐 14:31 – 15:01 · 📋 Teams</div>
+        </div>
+        <div class="card" style="margin-top:5px">
+          <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px">Last actions</div>
+          <div style="font-size:11px;color:#888">☑ Review budget spreadsheet</div>
+          <div style="font-size:11px;color:#888">☐ Finalize Q3 headcount ask</div>
+        </div>
+        <div class="card" style="margin-top:5px">
+          <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px">Recent context</div>
+          <div style="font-size:11px;color:#888">📧 Chris sent budget doc (Thu)</div>
+          <div style="font-size:11px;color:#888">💬 Travel approvals discussed (Tue)</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  late() {
+    return sbar('<span style="color:#f87171;animation:blink-c 0.5s steps(1) infinite;font-size:10px;font-weight:600">LATE</span> ') +
+    `<div class="content-area" style="box-shadow:inset 0 0 30px rgba(239,68,68,0.06)"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-red)"><span class="s-icon">🏃</span> RUNNING LATE</div>
+          <div class="big-metric" style="color:#f87171;animation:blink-c 1s steps(1) infinite">+3:21</div>
+          <div class="metric-label" style="color:#f87171">overdue</div>
+        </div>
+        <div class="col-left-orb">${orb('🏃','urgent')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card" style="border-color:rgba(239,68,68,0.15)">
+          <div style="font-size:13px;color:#ddd;font-weight:500">Weekly Team Standup</div>
+          <div style="font-size:11px;color:#777;margin-top:2px">Started at 14:00 · 📋 Teams</div>
+          <div style="font-size:11px;color:#f87171;margin-top:8px">4 attendees are waiting</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  'context-switch'() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">🔄</span> CONTEXT SWITCH</div>
+          <div class="big-metric" style="color:var(--rd-accent)">5 min</div>
+          <div class="metric-label">time to shift</div>
+        </div>
+        <div class="col-left-orb">${orb('🔄','sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card" style="border-top:2px solid #555">
+          <div style="font-size:9px;color:#555;text-transform:uppercase">Now</div>
+          <div style="font-size:12px;color:#bbb;margin-top:3px">Red Pro hardware</div>
+          <div style="font-size:10px;color:#555;margin-top:1px">BOM sourcing, display UX</div>
+        </div>
+        <div style="text-align:center;color:#444;font-size:14px;margin:4px 0">↓</div>
+        <div class="card" style="border-top:2px solid var(--rd-blue)">
+          <div style="font-size:9px;color:#555;text-transform:uppercase">Next</div>
+          <div style="font-size:12px;color:#bbb;margin-top:3px">1:1 with Chris</div>
+          <div style="font-size:10px;color:#555;margin-top:1px">Budget review, headcount</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  /* ─── AGENT (two-column) ─── */
+  working() {
+    const cols = Array.from({length:8},(_,i)=>{
+      const ch = '01{}[]();:=><+-./#_'.split('');
+      const len = 3+Math.floor(Math.random()*8);
+      const t = Array.from({length:len},()=>ch[Math.floor(Math.random()*ch.length)]);
+      return `<div class="rain-col" style="left:${i*20}px;animation-duration:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()*2}s"><span class="lead">${t[0]}</span>${t.slice(1).join('<br>')}</div>`;
+    }).join('');
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left" style="position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0.4">${cols}</div>
+        <div class="col-left-quick" style="position:relative;z-index:1">
+          <div class="section-hdr" style="color:var(--rd-cyan)"><span class="s-icon">⚙️</span> WORKING</div>
+          <div style="font-size:22px;color:var(--rd-cyan);font-weight:300;font-family:Consolas,monospace">2m 14s</div>
+          <div class="metric-label">elapsed</div>
+        </div>
+        <div class="col-left-orb" style="position:relative;z-index:1">${orb('⚙️','work')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:13px;color:#ddd;font-weight:500;margin-bottom:4px">Designing display scenarios</div>
+          <div style="font-size:11px;color:#888;line-height:1.5">Rebuilding v2 mockup with consistent two-column layout. Updating all 28 scenario renderers.</div>
+        </div>
+        ${todayStrip(defaultToday)}
+      </div>
+    </div></div>`;
+  },
+
+  done() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-green)"><span class="s-icon">✅</span> DONE</div>
+          <div style="font-size:22px;color:var(--rd-green);font-weight:300;font-family:Consolas,monospace">12m 34s</div>
+          <div class="metric-label">duration</div>
+        </div>
+        <div class="col-left-orb">${orb('✅','calm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card" style="border-color:rgba(74,222,128,0.15)">
+          <div style="font-size:13px;color:#ddd;font-weight:500;margin-bottom:4px">BOM sourced and carts prepared</div>
+          <div style="font-size:11px;color:#888;line-height:1.5">Amazon.nl cart filled with Pi Zero 2 WH, display, and sound card. PiSugar ordered on Amazon.de. AliExpress links saved.</div>
+        </div>
+        ${todayStrip(defaultToday)}
+      </div>
+    </div></div>`;
+  },
+
+  'needs-input'() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-gold)"><span class="s-icon">❓</span> INPUT NEEDED</div>
+          <div style="font-size:13px;color:var(--rd-gold);font-weight:500">Waiting</div>
+          <div class="metric-label">for your decision</div>
+        </div>
+        <div class="col-left-orb">${orb('❓','alert')}</div>
+      </div>
+      <div class="col-right">
+        <div style="font-size:11px;color:#888;margin-bottom:8px;line-height:1.4">Should I order the PiSugar S or upgrade to PiSugar 3?</div>
+        <div class="card" style="border-color:rgba(74,222,128,0.2);margin-bottom:5px">
+          <div style="font-size:10px;color:#4ade80">Recommended</div>
+          <div style="font-size:12px;color:#ddd;margin-top:1px">PiSugar S — €38, simple</div>
+        </div>
+        <div class="card">
+          <div style="font-size:10px;color:#888">Alternative</div>
+          <div style="font-size:12px;color:#ddd;margin-top:1px">PiSugar 3 — €40, monitoring</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  stuck() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-red)"><span class="s-icon">🤔</span> STUCK</div>
+          <div style="font-size:22px;color:#888;font-weight:300">3</div>
+          <div class="metric-label">retries failed</div>
+        </div>
+        <div class="col-left-orb">${orb('🤔','alert sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="font-size:12px;color:#ddd;font-weight:500;margin-bottom:4px">AliExpress blocked</div>
+          <div style="font-size:11px;color:#888;line-height:1.5">Captcha triggered after 2 page navigations. Tried 3 approaches — all blocked. Buttons need manual adding.</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  decision() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">⚖️</span> DECISION</div>
+          <div style="font-size:13px;color:#ddd">2 options</div>
+          <div class="metric-label">comparison</div>
+        </div>
+        <div class="col-left-orb">${orb('⚖️','sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card" style="border-color:rgba(74,222,128,0.2);margin-bottom:5px">
+          <div style="font-size:10px;color:#4ade80">Recommended</div>
+          <div style="font-size:12px;color:#ddd;margin-top:2px">USB Sound Card</div>
+          <div style="font-size:10px;color:#555;margin-top:1px">€1 — frees GPIO, plug-and-play</div>
+        </div>
+        <div class="card">
+          <div style="font-size:10px;color:#888">Alternative</div>
+          <div style="font-size:12px;color:#ddd;margin-top:2px">I2S DAC HAT</div>
+          <div style="font-size:10px;color:#555;margin-top:1px">€8 — better audio, uses GPIO</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  /* ─── WELLNESS (two-column) ─── */
+  hydrate() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-blue)"><span class="s-icon">💧</span> HYDRATE</div>
+          <div class="big-metric" style="color:var(--rd-blue)">94m</div>
+          <div class="metric-label">since last drink</div>
+        </div>
+        <div class="col-left-orb">${orb('💧','calm sm')}</div>
+      </div>
+      <div class="col-right" style="justify-content:center">
+        <div class="card">
+          <div style="font-size:14px;color:#ddd;text-align:center;padding:12px 0">Time for water 💧</div>
+          <div style="font-size:11px;color:#666;text-align:center">Stay hydrated — you're in a flow state</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  move() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-green)"><span class="s-icon">🚶</span> MOVE</div>
+          <div class="big-metric" style="color:var(--rd-green)">67m</div>
+          <div class="metric-label">sitting</div>
+        </div>
+        <div class="col-left-orb">${orb('🚶','calm sm')}</div>
+      </div>
+      <div class="col-right" style="justify-content:center">
+        <div class="card">
+          <div style="font-size:14px;color:#ddd;text-align:center;padding:12px 0">Stand up and stretch 🚶</div>
+          <div style="font-size:11px;color:#666;text-align:center">Quick 2-min break refreshes focus</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  focus() {
+    return sbar('<span style="color:#22c55e;font-size:9px;margin-right:4px">FOCUS</span>') +
+    `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-green)"><span class="s-icon">🎯</span> FOCUS MODE</div>
+          <div class="big-metric" style="color:var(--rd-green)">47:12</div>
+          <div class="metric-label">elapsed</div>
+        </div>
+        <div class="col-left-orb">${orb('🎯','calm')}</div>
+      </div>
+      <div class="col-right" style="justify-content:center">
+        <div style="width:90px;height:90px;border-radius:50%;border:2px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto">
+          <div style="position:absolute;inset:-4px;border-radius:50%;border:2px solid transparent;border-top-color:#22c55e;animation:focus-spin 3s linear infinite"></div>
+          <div style="font-size:11px;color:#22c55e">DEEP WORK</div>
+        </div>
+        <div style="text-align:center;font-size:10px;color:#555;margin-top:8px">Notifications paused · 42m left</div>
+      </div>
+    </div></div>`;
+  },
+
+  /* ─── PRO (two-column) ─── */
+  flight() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">✈️</span> FLIGHT</div>
+          <div style="text-align:center">
+            <div class="fl-code">AMS</div>
+            <div style="font-size:18px;color:#444;margin:2px 0">✈</div>
+            <div class="fl-code">LIN</div>
+          </div>
+          <div style="font-size:9px;color:#555;text-align:center;margin-top:2px">KL 1613</div>
+        </div>
+        <div class="col-left-orb">${orb('✈️','calm sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:12px;color:#ddd;font-weight:500">Amsterdam → Milan Linate</span>
+            <span class="fl-status-badge" style="background:rgba(74,222,128,0.15);color:#4ade80">On Time</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#777">
+            <span>🕐 08:30 → 10:25</span>
+            <span>Gate D47</span>
+          </div>
+          <div style="font-size:11px;color:#888;margin-top:6px">Board 07:55 · Terminal 2</div>
+        </div>
+        <div class="card" style="margin-top:5px">
+          <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px">Lounge</div>
+          <div style="font-size:11px;color:#888">KLM Crown Lounge 52 · Schengen</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  voice() {
+    const bars = Array.from({length:20},(_,i)=>{
+      const h = 6+Math.random()*30;
+      const c = `hsl(${20+i*3},80%,${45+Math.random()*20}%)`;
+      return `<div class="vbar" style="background:${c};height:${h}px;animation-delay:${i*0.04}s"></div>`;
+    }).join('');
+    return sbar('<span style="color:var(--rd-accent)">●</span> ') +
+    `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">🎙️</span> VOICE</div>
+          <div style="font-size:14px;color:#ddd;font-weight:500">Listening...</div>
+          <div class="metric-label">hold PTT</div>
+        </div>
+        <div class="col-left-orb">${orb('🎙️','')}</div>
+      </div>
+      <div class="col-right" style="justify-content:center">
+        <div class="voice-bars" style="height:80px;align-items:flex-end">${bars}</div>
+        <div style="text-align:center;font-size:10px;color:#555;margin-top:10px">Release button to send</div>
+      </div>
+    </div></div>`;
+  },
+
+  home() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr"><span class="s-icon">🏠</span> HOME</div>
+          <div style="font-size:22px;color:#ddd;font-weight:300">21.5°C</div>
+          <div class="metric-label">living room</div>
+        </div>
+        <div class="col-left-orb">${orb('🏠','sm')}</div>
+      </div>
+      <div class="col-right">
+        <div class="home-grid">
+          <div class="home-dev on"><div class="d-icon">💡</div><div class="d-name">Desk Lamp</div><div class="d-state">On 80%</div></div>
+          <div class="home-dev"><div class="d-icon">💡</div><div class="d-name">Ceiling</div><div class="d-state">Off</div></div>
+          <div class="home-dev on"><div class="d-icon">🌡️</div><div class="d-name">Climate</div><div class="d-state">21.5°C</div></div>
+          <div class="home-dev"><div class="d-icon">🔌</div><div class="d-name">Monitor</div><div class="d-state">Off</div></div>
+          <div class="home-dev on"><div class="d-icon">🎵</div><div class="d-name">Speaker</div><div class="d-state">Playing</div></div>
+          <div class="home-dev"><div class="d-icon">🤖</div><div class="d-name">Vacuum</div><div class="d-state">Docked</div></div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  morning() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div style="font-size:15px;color:#e0e0e0;font-weight:300;margin-top:4px">Good morning</div>
+          <div style="font-size:13px;color:#e0e0e0;font-weight:300">Michel</div>
+          <div style="font-size:11px;color:#666;margin-top:6px">⛅ 22°C</div>
+          <div style="font-size:11px;color:#666">Partly cloudy</div>
+        </div>
+        <div class="col-left-orb">${orb('☀️','')}</div>
+      </div>
+      <div class="col-right">
+        <div class="section-hdr"><span class="s-icon">📌</span> YOUR DAY</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:11px;color:#aaa;display:flex;align-items:center;gap:6px">📅 <span>3 meetings today</span></div>
+          <div style="font-size:11px;color:#aaa;display:flex;align-items:center;gap:6px">✉️ <span>5 unread (1 from Chris)</span></div>
+          <div style="font-size:11px;color:#aaa;display:flex;align-items:center;gap:6px">💬 <span>2 Teams messages overnight</span></div>
+        </div>
+        <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04)">
+          <div style="font-size:11px;color:var(--rd-accent);display:flex;align-items:center;gap:6px">📌 <span>Review budget doc before 1:1</span></div>
+        </div>
+        ${todayStrip([
+          { time:'09:00', title:'Standup', until:'1h' },
+          { time:'11:00', title:'1:1 Chris', until:'3h' },
+          { time:'14:00', title:'Design Review', until:'6h' },
+        ])}
+      </div>
+    </div></div>`;
+  },
+
+  shutdown() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div style="font-size:15px;color:#ddd;font-weight:300;margin-top:4px">Good night</div>
+          <div style="font-size:13px;color:#ddd;font-weight:300">Michel</div>
+          <div style="font-size:11px;color:#555;margin-top:6px">Saturday, May 2</div>
+        </div>
+        <div class="col-left-orb">${orb('🌅','sleep')}</div>
+      </div>
+      <div class="col-right">
+        <div class="section-hdr" style="color:#7b68ee"><span class="s-icon">📊</span> TODAY'S SUMMARY</div>
+        <div class="card">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px;color:#aaa">📅 4 meetings attended</div>
+            <div style="font-size:11px;color:#aaa">✉️ 12 emails handled</div>
+            <div style="font-size:11px;color:#aaa">💬 8 Teams conversations</div>
+            <div style="font-size:11px;color:#aaa">🤖 Red handled 23 notifications</div>
+          </div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  celebration() {
+    const sp = Array.from({length:10},(_,i)=>{
+      const x=170+Math.random()*290, y=10+Math.random()*250, d=Math.random()*2;
+      const e=['✨','🎊','⭐','💫'][Math.floor(Math.random()*4)];
+      return `<div class="sparkle" style="left:${x}px;top:${y}px;animation-delay:${d}s">${e}</div>`;
+    }).join('');
+    return sbar() + `<div class="content-area" style="position:relative"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div class="section-hdr" style="color:var(--rd-gold)"><span class="s-icon">🎉</span> CELEBRATION</div>
+          <div style="font-size:28px;margin-top:8px;text-align:center">🎉</div>
+        </div>
+        <div class="col-left-orb">${orb('🎉','calm')}</div>
+      </div>
+      <div class="col-right" style="justify-content:center;position:relative">
+        ${sp}
+        <div class="card" style="border-color:rgba(251,191,36,0.15);text-align:center;position:relative;z-index:1">
+          <div style="font-size:16px;color:#ddd;font-weight:500;margin-bottom:4px">Inbox Zero!</div>
+          <div style="font-size:11px;color:#888">All emails handled. Take a moment.</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+
+  personality() {
+    return sbar() + `<div class="content-area"><div class="two-col">
+      <div class="col-left">
+        <div class="col-left-quick">
+          <div style="font-size:28px;color:rgba(255,255,255,0.4);font-weight:200;font-family:Consolas,monospace">14:26</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.15);margin-top:2px">Saturday</div>
+        </div>
+        <div class="col-left-orb">
+          <div class="emoji-indicator"><span class="emoji-icon" style="font-size:64px;animation:personality-morph 3s ease-in-out infinite">🦞</span></div>
+        </div>
+      </div>
+      <div class="col-right" style="justify-content:center">
+        <div style="text-align:center">
+          <div style="font-size:11px;color:rgba(255,255,255,0.12)">Red is vibing ✨</div>
+        </div>
+      </div>
+    </div></div>`;
+  },
+};
+
+/* ═════════════════════════════════════════
+   UI LOGIC
+   ═════════════════════════════════════════ */
+function renderCats() {
+  document.getElementById('cats').innerHTML =
+    `<button class="cat-btn ${activeCat==='all'?'active':''}" onclick="setCat('all')">All (${S.length})</button>` +
+    CATS.map(c=>`<button class="cat-btn ${activeCat===c?'active':''}" onclick="setCat('${c}')">${c} (${S.filter(s=>s.cat===c).length})</button>`).join('');
+}
+
+function renderList() {
+  const f = activeCat==='all' ? S : S.filter(s=>s.cat===activeCat);
+  document.getElementById('list').innerHTML = f.map(s=>
+    `<div class="scenario-item ${activeS.id===s.id?'active':''}" onclick="sel('${s.id}')">
+      <span class="icon">${s.icon}</span><span class="label">${s.name}</span>
+      ${s.isNew?'<span class="badge">NEW</span>':''}
+    </div>`).join('');
+}
+
+function renderDesc() {
+  const s = activeS;
+  const cc = {Ambient:'background:rgba(74,222,128,0.12);color:#4ade80',Notifications:'background:rgba(96,165,250,0.12);color:#60a5fa',
+    Calendar:'background:rgba(251,191,36,0.12);color:#fbbf24',Agent:'background:rgba(168,85,247,0.12);color:#a855f7',
+    Wellness:'background:rgba(52,211,153,0.12);color:#34d399',Pro:'background:rgba(253,142,161,0.12);color:#fd8ea1'};
+  document.getElementById('desc').innerHTML = `
+    <h2>${s.icon} ${s.name}</h2>
+    <span class="cat-tag" style="${cc[s.cat]||''}">${s.cat}${s.isNew?' — New for Pro':''}</span>
+    <p>${s.desc}</p>
+    <div class="dets">
+      <div class="det-row"><span class="det-lbl">Trigger</span><span class="det-val">${s.trigger}</span></div>
+      <div class="det-row"><span class="det-lbl">Emoji</span><span class="det-val">${s.orb}</span></div>
+      <div class="det-row"><span class="det-lbl">Duration</span><span class="det-val">${s.duration}</span></div>
+    </div>`;
+}
+
+function sel(id) { activeS = S.find(s=>s.id===id); document.getElementById('screen').innerHTML = (R[id]||R.idle)(); renderList(); renderDesc(); }
+function setCat(c) { activeCat = c; renderCats(); renderList(); }
+
+renderCats(); renderList(); sel('countdown');
+</script>
+</body>
+</html>
