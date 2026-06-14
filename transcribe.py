@@ -75,7 +75,7 @@ def split_audio(input_path: str, chunk_seconds: int, tmp_dir: str) -> list[str]:
     return chunks
 
 
-def transcribe_chunks(chunks: list[str], model_name: str) -> str:
+def transcribe_chunks(chunks: list[str], model_name: str, language: str | None = None) -> str:
     import whisper
 
     print(f"\nLoading Whisper model '{model_name}' ...")
@@ -84,7 +84,7 @@ def transcribe_chunks(chunks: list[str], model_name: str) -> str:
 
     for i, chunk_path in enumerate(chunks):
         print(f"  Transcribing chunk {i + 1}/{len(chunks)} ...")
-        result = model.transcribe(chunk_path, fp16=False)
+        result = model.transcribe(chunk_path, fp16=False, language=language)
         parts.append(result["text"].strip())
 
     return " ".join(parts)
@@ -95,6 +95,9 @@ def main():
     parser.add_argument("audio_file", help="Path to the audio file")
     parser.add_argument("--model", default="base", choices=["tiny", "base", "small", "medium", "large"],
                         help="Whisper model to use (default: base)")
+    parser.add_argument("--language", default=None,
+                        help="Language code to force (e.g. 'nl' for Dutch, 'en' for English). "
+                             "Auto-detected if omitted.")
     parser.add_argument("--chunk-minutes", type=int, default=10,
                         help="Split audio into N-minute chunks (default: 10)")
     parser.add_argument("--output", help="Save transcript to this .md file (default: <audio_file>.md)")
@@ -116,7 +119,7 @@ def main():
         print(f"\nSplitting into {args.chunk_minutes}-minute chunks ...")
         chunks = split_audio(audio_path, chunk_seconds, tmp_dir)
 
-        transcript = transcribe_chunks(chunks, args.model)
+        transcript = transcribe_chunks(chunks, args.model, language=args.language)
 
     out_path = Path(args.output) if args.output else Path(audio_path).with_suffix(".md")
 
